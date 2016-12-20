@@ -21,7 +21,7 @@ public:
     bool SPIOpen();
     bool setSPIMode(unsigned char SPIMode);
     bool setSPIBits(unsigned char SPIBits);
-    bool steSPISpeed(unsigned char SPISpeed);
+    bool setSPISpeed(uint32_t SPISpeed);
     void IMUSettingsClose();
     void SPIClose();
     unsigned char SPIMode;

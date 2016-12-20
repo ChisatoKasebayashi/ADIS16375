@@ -24,13 +24,45 @@ bool IMUSettings::setSPIMode(unsigned char SPIMode)
     if(ioctl(my_SPI, SPI_IOC_WR_MODE, &SPIMode) < 0)
     {
         IMUError("Failed to set SPI_IOC_WR_MODE");
+		close(my_SPI);
         return false;
     }
     if(ioctl(my_SPI,SPI_IOC_RD_MODE, &SPIMode) < 0)
     {
         IMUError("Failed to set SPI_IOC_RD_MODE");
+		close(my_SPI);
         return false;
     }
+}
+bool IMUSettings::setSPIBits(unsigned char SPIBits)
+{
+	if(ioctl(my_SPI, SPI_IOC_WR_BITS_PER_WORD, &SPIBits) < 0)
+	{
+		IMUError("Failed ti set SPI_IOC_WR_BITS_PER_WORD");
+		close(my_SPI);
+		return false;
+	}
+	if(ioctl(my_SPI, SPI_IOC_RD_BITS_PER_WORD, &SPIBits) < 0)
+	{
+		IMUError("Failed to set SPI_IOC_RD_BITS_PER_WORD");
+		close(my_SPI);
+		return false;
+	}
+}
+bool IMUSettings::setSPISpeed(uint32_t SPISpeed)
+{
+	if(ioctl(my_SPI, SPI_IOC_WR_MAX_SPEED_HZ, &SPISpeed) < 0)
+	{
+		IMUError("Failed to set SPI_IOC_WR_MAX_SPEED_HZ");
+		close(my_SPI);
+		return false;
+	}
+	if(ioctl(my_SPI, SPI_IOC_RD_MAX_SPEED_HZ, &SPISpeed) < 0)
+	{
+		IMUError("Failed to set SPI_IOC_RD_MAX_SPEED_HZ");
+		close(my_SPI);
+		return false;
+	}
 }
 void IMUSettings::IMUSettingsClose()
 {
@@ -60,6 +92,16 @@ bool IMUSettings::SPIOpen()
         printf("mode settings bad");
         return false;
     }
+	if(setSPIBits(SPIBits) < 0)
+	{
+		printf("bits per word settings bad");
+		return false;
+	}
+	if(setSPISpeed(SPISpeed) < 0)
+	{
+		printf("speed settings bad");
+		return false;
+	}
 }
 
 const char *IMUSettings::device()
